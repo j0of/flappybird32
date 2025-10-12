@@ -121,6 +121,7 @@ void loop() {
                 obsMan.reset();
                 clearBg();
                 player.draw(tft);
+                delay(1000);
             }
         } else {
             tft.setTextColor(ST7735_BLACK);
