@@ -13,8 +13,7 @@ void Player::reset() {
 void Player::tick(float dt) {
     vel += gravity * dt;
 
-    if (shouldJump)
-    {
+    if (shouldJump) {
         tone(BUZZER, 1000, 100);
         vel = jumpPower;
         shouldJump = false;

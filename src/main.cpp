@@ -19,8 +19,14 @@ int highscore;
 void drawCenteredText(const char *s, int16_t y = -1);
 
 volatile bool jumpRequested;
+volatile unsigned long lastInterruptTime = 0;
+
 void jumpIntr() {
-    jumpRequested = true;
+    unsigned long now = millis();
+    if (now - lastInterruptTime > 100) {  // debounce delay in ms
+        jumpRequested = true;
+        lastInterruptTime = now;
+    }
 }
 
 void clearBg();
@@ -112,6 +118,7 @@ void loop() {
             } else {
                 tone(BUZZER, 80, 600);
             }
+            delay(2000);
         }
     } else {
         if (gameOver) {
@@ -121,7 +128,6 @@ void loop() {
                 obsMan.reset();
                 clearBg();
                 player.draw(tft);
-                delay(1000);
             }
         } else {
             tft.setTextColor(ST7735_BLACK);
