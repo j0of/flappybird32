@@ -23,7 +23,7 @@ volatile unsigned long lastInterruptTime = 0;
 
 void jumpIntr() {
     unsigned long now = millis();
-    if (now - lastInterruptTime > 100) {  // debounce delay in ms
+    if (now - lastInterruptTime > 250) {  // debounce delay in ms
         jumpRequested = true;
         lastInterruptTime = now;
     }
@@ -75,10 +75,6 @@ void loop() {
 
         player.draw(tft);
         obsMan.draw(tft);
-
-        tft.setTextColor(ST7735_WHITE, COLOUR_DIRT);
-        tft.setCursor(0, 153);
-        tft.printf("FPS: %f", 1.0f / dt);
         
         tft.setTextColor(ST7735_BLACK, COLOUR_SKY);
         char hiText[32];
@@ -139,6 +135,9 @@ void loop() {
             }
         }
     }
+    tft.setTextColor(ST7735_WHITE, COLOUR_DIRT);
+    tft.setCursor(0, 153);
+    tft.printf("FPS: %f", 1.0f / dt);
 }
 
 void drawCenteredText(const char* s, int16_t y) {
