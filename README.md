@@ -21,6 +21,9 @@ Mini flappybird console implemented using ESP32 and Arduino framework.
 | D15 | Slide switch (Middle) |
 
 5V  ----- TFT VCC
+
 GND ----- TFT GND
+
 GND ----- 10k ohms ----- Button (B)
+
 GND ----- (-) Passive buzzer (+) ----- Slide switch (B)
