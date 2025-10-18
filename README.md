@@ -1,6 +1,8 @@
 # Flappybird32
 Mini flappybird console implemented using ESP32 and Arduino framework.
 
+https://github.com/user-attachments/assets/f266951c-387f-4cfc-aca1-4248d2725a74
+
 # Components
 - ESP-WROOM32
 - Dollatek 1.8' 128x160 RGB TFT_LCD (ST7735)
