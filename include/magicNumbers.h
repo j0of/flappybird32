@@ -12,9 +12,9 @@
 #define TFT_DC 25
 #define TFT_CS 33
 
-#define BTN 4
+#define BTN 16
 
-#define BUZZER 16
+#define BUZZER 4
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 160
