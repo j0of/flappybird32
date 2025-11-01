@@ -12,13 +12,13 @@ Mini flappybird console implemented using ESP32 and Arduino framework.
 # Wiring
 | ESP32 Pin | Component |
 | --- | --- |
-| D14 | TFT CS |
-| D13 | TFT RES |
-| D12 | TFT DC |
-| D25 | TFT SCL |
-| D26 | TFT SDA |
-| D32 | Push button (A) |
-| D15 | Slide switch (Middle) |
+| D14 | TFT SCL |
+| D27 | TFT SDA |
+| D26 | TFT RES |
+| D25 | TFT DC |
+| D33 | TFT CS |
+| D4 | Push button (A) |
+| D16 | Slide switch (Middle) |
 
 5V  ----- TFT VCC
 

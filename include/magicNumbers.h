@@ -6,16 +6,15 @@
 #define COLOUR_GRASS 30182
 #define COLOUR_PIPE 21508
 
-#define TFT_CS 14
-#define TFT_RST 13
-#define TFT_DC 12
+#define TFT_SCL 14
+#define TFT_SDA 27
+#define TFT_RST 26
+#define TFT_DC 25
+#define TFT_CS 33
 
-#define TFT_SCL 25
-#define TFT_SDA 26
+#define BTN 4
 
-#define BTN 32
-
-#define BUZZER 15
+#define BUZZER 16
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 160
