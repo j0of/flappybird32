@@ -14,7 +14,7 @@
 
 #define BTN 16
 
-#define BUZZER 4
+#define BUZZER 19
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 160

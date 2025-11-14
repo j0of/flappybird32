@@ -20,7 +20,7 @@ https://github.com/user-attachments/assets/f266951c-387f-4cfc-aca1-4248d2725a74
 | D25 | TFT DC |
 | D33 | TFT CS |
 | D16 | Push button (A) |
-| D4 | Slide switch (Middle) |
+| D19 | Slide switch (Middle) |
 
 5V  ----- TFT VCC
 
