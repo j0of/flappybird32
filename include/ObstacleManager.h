@@ -7,19 +7,20 @@ class Obstacle;
 
 class ObstacleManager {
 public:
-    ObstacleManager(const Player &player);
+    ObstacleManager(Adafruit_ST7735 *_tft, const Player &_player);
     void reset();
 
     void tick(float dt);
-    void clear(Adafruit_ST7735 &tft) const;
-    void draw(Adafruit_ST7735 &tft) const;
-    int getPassed() const;
+    void clear() const;
+    void draw() const;
+    int getScore() const { return score; };
     
     bool playerIntersects() const;
 private:
-    int passed;
+    Adafruit_ST7735 *tft;
+    int score;
     static constexpr int obstaclesLen = 2;
-    Obstacle obstacles[obstaclesLen];
+    Obstacle *obstacles[obstaclesLen];
     const Player &player;
     static constexpr int xGap = 100;
 };

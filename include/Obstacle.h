@@ -8,13 +8,15 @@ class ObstacleManager;
 class Obstacle {
     friend class ObstacleManager;
 public:
-    Obstacle(int xPos = 0);
+    Obstacle(Adafruit_ST7735 *_tft, int _x = 0);
 private:
-    void reset(int xPos);
+    void reset(int _x);
 
     void tick(float dt);
-    void clear(Adafruit_ST7735 &tft) const;
-    void draw(Adafruit_ST7735 &tft) const;
+    void clear() const;
+    void draw() const;
+
+    Adafruit_ST7735 *tft;
 
     static constexpr int w = 25;
     float x;

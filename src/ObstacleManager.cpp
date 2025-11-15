@@ -1,68 +1,63 @@
 #include "ObstacleManager.h"
 
-#include "magicNumbers.h"
-#include "math.h"
+#include "config.h"
 
 bool circleIntersectsRect(float cx, float cy, float radius, float rx, float ry, float rw, float rh);
 
-ObstacleManager::ObstacleManager(const Player &player) : player(player) {
+ObstacleManager::ObstacleManager(Adafruit_ST7735 *_tft, const Player &_player) : tft(_tft), player(_player), score(0) {
     for (int i = 0; i < obstaclesLen; i++) {
-        obstacles[i] = { SCREEN_WIDTH + i * xGap };
+        obstacles[i] = new Obstacle(tft, SCREEN_WIDTH + i * xGap);
     }
 }
 
 void ObstacleManager::reset() {
-    passed = 0;
+    score = 0;
     for (int i = 0; i < obstaclesLen; i++) {
-        obstacles[i].reset(SCREEN_WIDTH + i * xGap);
+        obstacles[i]->reset(SCREEN_WIDTH + i * xGap);
     }
 }
 
 void ObstacleManager::tick(float dt) {
-    for (Obstacle &o : obstacles) {
-        if (!o.scored && player.x + player.r > o.x + o.w) {
+    for (Obstacle *o : obstacles) {
+        if (!o->scored && player.x + player.r > o->x + o->w) {
             noTone(BUZZER);
             tone(BUZZER, 988, 75);
             tone(BUZZER, 1318, 500);
-            passed++;
-            o.scored = true;
+            score++;
+            o->scored = true;
         } 
-        if (o.x + o.w < 0) {
+        if (o->x + o->w < 0) {
             int farthest = 0;
-            for (const Obstacle &o1 : obstacles) {
-                if (o1.x - o.x > farthest - o.x)
-                    farthest = o1.x;
+            for (Obstacle *o1 : obstacles) {
+                if (o1->x - o->x > farthest - o->x)
+                    farthest = o1->x;
             }
-            o.reset(farthest + xGap);
+            o->reset(farthest + xGap);
         }
-        o.tick(dt);
+        o->tick(dt);
     }
 }
 
-void ObstacleManager::clear(Adafruit_ST7735 &tft) const {
-    for (const Obstacle &o : obstacles) {
-        o.clear(tft);
+void ObstacleManager::clear() const {
+    for (Obstacle *o : obstacles) {
+        o->clear();
     }
 }
 
-void ObstacleManager::draw(Adafruit_ST7735 &tft) const {
-    for (const Obstacle &o : obstacles) {
-        o.draw(tft);
+void ObstacleManager::draw() const {
+    for (Obstacle *o : obstacles) {
+        o->draw();
     }
-}
-
-int ObstacleManager::getPassed() const {
-    return passed;
 }
 
 bool ObstacleManager::playerIntersects() const {
-    for (const Obstacle &o : obstacles) {
-        if (circleIntersectsRect(player.x, player.getY(), player.r, o.x, o.y2, o.w, o.h2)) {
+    for (Obstacle *o : obstacles) {
+        if (circleIntersectsRect(player.x, player.getY(), player.r, o->x, o->y2, o->w, o->h2)) {
             return true;
         }
 
         // Prevent player from going above y1 (top obstacle)
-        if (player.getY() - player.r < o.y1 + o.h1 && player.x + player.r > o.x && player.x - player.r < o.x + o.w) {
+        if (player.getY() - player.r < o->y1 + o->h1 && player.x + player.r > o->x && player.x - player.r < o->x + o->w) {
             // Player is overlapping the top obstacle
             return true;
         }
