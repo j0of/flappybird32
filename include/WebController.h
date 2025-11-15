@@ -10,8 +10,9 @@ public:
     WebController();
     void loop();
     void setup();
-    void broadcastHighscore(int highscore);
     void broadcastFPS(float fps);
+    void broadcastNewhi(int newhi, int oldhi);
+    void broadcastGameover();
     String getIp() { return String(WiFi.softAPIP().toString()); };
     bool remoteTrigger;
 private:
@@ -20,14 +21,9 @@ private:
     void onIndexRequest(AsyncWebServerRequest *request);
     String generateHTML();
 
-    static constexpr char *ssid = "flappybird32 remote control";
-    static constexpr char *password = "joof.sleeps";
-    static constexpr int httpPort = 80;
-    static constexpr int tcpPort = 1337;
-
     AsyncWebServer server;
     WebSocketsServer ws;
-    char msgBuf[10];
+    char msgBuf[16];
 
     String header;
 };

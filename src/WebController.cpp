@@ -1,9 +1,10 @@
 #include "WebController.h"
+#include "config.h"
 
-WebController::WebController() : server(80), ws(1337) {}
+WebController::WebController() : server(HTTP_PORT), ws(TCP_PORT) {}
 
 void WebController::setup(){ 
-    WiFi.softAP(ssid, password);
+    WiFi.softAP(SSID, PASSWORD);
     Serial.println("AP running");
     Serial.printf("My IP Address: %s", WiFi.softAPIP().toString());
     server.on("/", HTTP_GET, [&](AsyncWebServerRequest *request){
@@ -32,13 +33,18 @@ void WebController::loopTask(void *params) {
     }
 }
 
-void WebController::broadcastHighscore(int highscore) {
-    sprintf(msgBuf, "YOUR HIGHSCORE : %d", highscore);
+void WebController::broadcastFPS(float fps) {
+    sprintf(msgBuf, "FPS : %.2f", fps);
     ws.broadcastTXT(msgBuf);
 }
 
-void WebController::broadcastFPS(float fps) {
-    sprintf(msgBuf, "FPS : %.2f", fps);
+void WebController::broadcastNewhi(int newhi, int oldhi) {
+    sprintf(msgBuf, "newhi %d %d", newhi, oldhi);
+    ws.broadcastTXT(msgBuf);
+}
+
+void WebController::broadcastGameover() {
+    sprintf(msgBuf, "gameover");
     ws.broadcastTXT(msgBuf);
 }
 
@@ -82,16 +88,20 @@ String WebController::generateHTML() {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>flappybird32 remote control</title>
             <script language="javascript" type="text/javascript">
-                var url="ws://)rawliteral" + WiFi.softAPIP().toString() + ":" + String(tcpPort) + R"rawliteral("
+                var url="ws://)rawliteral" + WiFi.softAPIP().toString() + ":" + String(TCP_PORT) + R"rawliteral("
                 var high
                 var fps
                 var button
                 var ws
+                var topText
+                var newhi
 
                 function init() {
-                    button = document.getElementById("trigger")
                     high = document.getElementById("high")
                     fps = document.getElementById("fps")
+                    button = document.getElementById("trigger")
+                    topText = document.getElementById("topText")
+                    newhi = document.getElementById("newhi")
                     wsConnect(url)
                 }
 
@@ -116,10 +126,18 @@ String WebController::generateHTML() {
 
                 function onMessage(evt) {
                     console.log("Received " + evt.data)
-                    if (evt.data.startsWith("YOUR HIGHSCORE")) {
-                        high.innerText = evt.data
-                    } else if (evt.data.startsWith("FPS")) {
+                    if (evt.data.startsWith("FPS")) {
                         fps.innerText = evt.data
+                    } else if (evt.data.startsWith("gameover")) {
+                        topText.innerText = "GAMEOVER !"
+                        topText.style.display = "block"
+                    } else if (evt.data.startsWith("newhi")) {
+                        const s = evt.data.split(" ")
+                        topText.innerText = "NEW HI !"
+                        topText.style.display = "block"
+                        newhi.innerText = "Your new highscore of " + s[1] + " beat your old highscore of " + s[2] + " by " + (Number(s[1]) - Number(s[2])) + " points!" 
+                        newhi.style.display = "block"
+                        high.innerText = "YOUR HIGHSCORE : " + s[1];
                     }
                 }
 
@@ -134,7 +152,8 @@ String WebController::generateHTML() {
                 
                 function onPress() {
                     doSend("trigger")
-                    console.log("pressed")
+                    topText.style.display = "none"
+                    newhi.style.display = "none"
                 }
 
                 window.addEventListener("load", init, false)
@@ -142,6 +161,8 @@ String WebController::generateHTML() {
         </head>
         <body>
             <div style="text-align:center">
+                <h1 id="topText" style="display:none"></h1>
+                <h2 id="newhi" style="display:none"></h2>
                 <button id="trigger" onclick="onPress()" style="padding:10%;border-radius:100px;">big round button</button>
                 <h2 id="high">YOUR HIGHSCORE : 0</h2>
                 <p id="fps">FPS : 0</p>

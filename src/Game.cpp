@@ -89,8 +89,7 @@ void Game::loop() {
             drawCenteredText("GAME OVER!");
             noTone(BUZZER);
             if (score > highScore) {
-                highScore = score;
-                webcontroller->broadcastHighscore(highScore);
+                webcontroller->broadcastNewhi(score, highScore);
                 
                 tone(BUZZER, 784, 100);
                 tone(BUZZER, 1046, 100);
@@ -101,7 +100,7 @@ void Game::loop() {
                 tone(BUZZER, 784, 100);
                 tone(BUZZER, 1046, 100);
                 tone(BUZZER, 1318, 300);
-
+                
                 tft.fillRect(0, 10, SCREEN_WIDTH, 36, ST7735_ORANGE);
                 tft.setTextColor(ST7735_YELLOW);
                 drawCenteredText("CONGRATULATIONS!",  15);
@@ -111,7 +110,10 @@ void Game::loop() {
                 char oldhi[16];
                 sprintf(oldhi, "OLD HI:%d", highScore);
                 drawCenteredText(oldhi, 35);
+                
+                highScore = score;
             } else {
+                webcontroller->broadcastGameover();
                 tone(BUZZER, 80, 600);
             }
             delay(1000);
